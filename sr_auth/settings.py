@@ -23,7 +23,7 @@ env = environ.Env(
     DATABASES_USER=str,
     DATABASES_PASSWORD=str,
     DATABASE_HOST=str,
-    DATABASE_PORT=int,
+    DATABASE_PORT=(int, 5432),
 
     DATABASE_NAME_LOCAL=str,
     DATABASES_USER_LOCAL=str,
@@ -45,9 +45,11 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['*']  # (!) в продакшене указать конкретные домены
+ALLOWED_HOSTS = ['auth.localhost', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -116,6 +118,18 @@ DATABASES = {
         "PORT": env('DATABASE_PORT_LOCAL' if DEBUG else 'DATABASE_PORT'),
     },
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": env('DATABASE_NAME'),
+#         "USER": env('DATABASES_USER'),
+#         "PASSWORD": env('DATABASES_PASSWORD'),
+#         "HOST": env('DATABASE_HOST'),
+#         "PORT": env('DATABASE_PORT'),
+#     },
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

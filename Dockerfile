@@ -15,11 +15,14 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Копируем файлы проекта в контейнер
-COPY . /app
+# Копируем только requirements.txt
+COPY requirements.txt /app/
 
 # Устанавливаем зависимости Python
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем остальные файлы проекта
+COPY . /app
 
 # Пробрасываем порт
 EXPOSE 8000

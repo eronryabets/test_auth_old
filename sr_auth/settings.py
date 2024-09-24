@@ -15,9 +15,11 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 env = environ.Env(
     DEBUG=bool,
-    SECRET_KEY=str,
+    SECRET_KEY_SR_AUTH=str,
 
     DATABASE_NAME=str,
     DATABASES_USER=str,
@@ -32,17 +34,32 @@ env = environ.Env(
     DATABASE_HOST_LOCAL=str,
 )
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Take environment variables from .env file
-environ.Env.read_env(BASE_DIR / '.env')
+# environ.Env.read_env(BASE_DIR / '.env')
+# environ.Env.read_env(BASE_DIR / '../docker_compose/.env') #PROD
+# environ.Env.read_env('F:/Work/SmartReader/docker_compose/.env') #LOCAL
+
+
+# Проверяем, включен ли DEBUG
+if env('DEBUG', default=True):
+    # Если DEBUG=True, используем абсолютный путь для локальной разработки
+    env_path = 'F:/Work/SmartReader/docker_compose/.env'
+else:
+    # Если DEBUG=False, используем путь относительно BASE_DIR (для Docker или продакшена)
+    env_path = BASE_DIR / '../docker_compose/.env'
+
+environ.Env.read_env(env_path)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY_SR_AUTH')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
